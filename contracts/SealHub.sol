@@ -51,6 +51,7 @@ contract SealHub is ERC2771Recipient, Versioned, Ownable {
     commitmentMap[commitment] = true;
     commitments.push(commitment);
     numberOfCommitments.increment();
+    // Add to Merkle Tree
     tree.insert(commitment);
     bytes32 merkleRoot = bytes32(tree.root);
     merkleRoots.push(merkleRoot);
