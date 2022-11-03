@@ -1,4 +1,3 @@
-import { SealHub, SealHub__factory } from 'typechain'
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
 import {
