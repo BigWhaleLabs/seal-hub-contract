@@ -6,9 +6,6 @@ import { poseidonContract } from 'circomlibjs'
 
 export const zeroAddress = '0x0000000000000000000000000000000000000000'
 
-const regSize = 64
-const regNumber = 4
-
 export async function getIncrementalTreeContract() {
   console.log(poseidonContract)
   const poseidonT3ABI = poseidonContract.generateABI(2)
