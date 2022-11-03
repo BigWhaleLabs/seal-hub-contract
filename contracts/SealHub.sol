@@ -4,11 +4,14 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@opengsn/contracts/src/ERC2771Recipient.sol";
 import "@big-whale-labs/versioned-contract/contracts/Versioned.sol";
+import "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol";
 import "./models/ECDSAProof.sol";
 import "./interfaces/IECDSACheckerVerifier.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SealHub is ERC2771Recipient, Versioned {
+contract SealHub is ERC2771Recipient, Versioned, Ownable {
   using Counters for Counters.Counter;
+  using IncrementalBinaryTree for IncrementalTreeData;
 
   // State
   address public verifierContract;
@@ -16,6 +19,7 @@ contract SealHub is ERC2771Recipient, Versioned {
   mapping(uint256 => bool) public commitmentMap;
   uint256[] public commitments;
   bytes32[] public merkleRoots;
+  IncrementalTreeData public tree;
 
   // Events
   event CommitmentCreated(uint256 commitmentId, bytes32 merkleRoot);
@@ -28,6 +32,7 @@ contract SealHub is ERC2771Recipient, Versioned {
   ) Versioned(_version) {
     verifierContract = _verifierContract;
     _setTrustedForwarder(_trustedForwarder);
+    tree.init(30, 0);
   }
 
   function createCommitment(ECDSAProof memory proof) public {
@@ -46,8 +51,9 @@ contract SealHub is ERC2771Recipient, Versioned {
     commitmentMap[commitment] = true;
     commitments.push(commitment);
     numberOfCommitments.increment();
-    // TODO: add to incremental Merkle tree (let's do depth 30, which gives ~1B commitments)
-    // TODO: after we add to incremental Merkle tree we also need to push the new Merkle root to the merkleRoots array
+    tree.insert(commitment);
+    bytes32 merkleRoot = bytes32(tree.root);
+    merkleRoots.push(merkleRoot);
     emit CommitmentCreated(commitment, merkleRoot);
   }
 
