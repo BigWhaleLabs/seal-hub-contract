@@ -1,4 +1,3 @@
-import { ECDSAProofStruct } from 'typechain/contracts/SealHub'
 import { SealHub, SealHub__factory } from 'typechain'
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
@@ -50,7 +49,9 @@ describe('SealHub contract tests', () => {
     })
     it('should add a commitment', async function () {
       const fakeProof = await getFakeCommitmentProof()
-      await (this.SealHubContract as SealHub).createCommitment(fakeProof)
+      const SealHub = this.SealHubContract as SealHub
+      await SealHub.createCommitment(fakeProof)
+      expect((await SealHub.tree()).numberOfLeaves).to.equal(1)
     })
   })
 })

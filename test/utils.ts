@@ -1,9 +1,8 @@
-import { BigNumber, Wallet, utils } from 'ethers'
+import { BigNumber, BigNumberish, utils } from 'ethers'
 import { ECDSAProofStruct } from 'typechain/contracts/SealHub'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { ethers, waffle } from 'hardhat'
 import { poseidonContract } from 'circomlibjs'
-import Mimc7 from './Mimc7'
 
 export const zeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -88,7 +87,7 @@ export async function getFakeECDSAVerifier(signer: SignerWithAddress) {
   ])
 }
 
-export async function getFakeCommitmentProof(): Promise<ECDSAProofStruct> {
+export function getFakeCommitmentProof(): ECDSAProofStruct {
   return {
     a: [1, 2],
     b: [
@@ -96,47 +95,11 @@ export async function getFakeCommitmentProof(): Promise<ECDSAProofStruct> {
       [3, 4],
     ],
     c: [1, 2],
-    input: await inputsForMessage('Signature for SealHub'),
+    input: inputsForMessage('seal'),
   }
 }
 
-function bigintToArray(x: bigint, n = regSize, k = regNumber) {
-  let mod = 1n
-  for (let idx = 0; idx < n; idx++) {
-    mod = mod * 2n
-  }
-
-  const ret = [] as bigint[]
-  let x_temp = x
-  for (let idx = 0; idx < k; idx++) {
-    ret.push(x_temp % mod)
-    x_temp = x_temp / mod
-  }
-  return ret.map((el) => el.toString())
-}
-
-function publicKeyToArrays(publicKey: string) {
-  const x = bigintToArray(BigInt('0x' + publicKey.slice(4, 4 + 64)))
-  const y = bigintToArray(BigInt('0x' + publicKey.slice(68, 68 + 64)))
-
-  return [x, y]
-}
-
-async function inputsForMessage(message: string) {
+function inputsForMessage(message: string) {
   const messageBytes = utils.toUtf8Bytes(message)
-  const mimc7 = await new Mimc7().prepare()
-  const messageHash = mimc7.hashWithoutBabyJub(messageBytes)
-  const signature = await Wallet.createRandom().signMessage(messageHash)
-
-  const publicKey = utils.recoverPublicKey(messageHash, signature)
-
-  const r = bigintToArray(BigInt('0x' + signature.slice(2, 2 + 64)), 64, 4)
-  const s = bigintToArray(BigInt('0x' + signature.slice(66, 66 + 64)), 64, 4)
-
-  return [
-    r,
-    s,
-    publicKeyToArrays(publicKey),
-    [bigintToArray(BigNumber.from(messageHash).toBigInt())],
-  ]
+  return [BigNumber.from(messageBytes).toBigInt()] as [BigNumberish]
 }
