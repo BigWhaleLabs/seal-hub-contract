@@ -1,10 +1,10 @@
 {
-  "name": "@borodutch/smart-contract-starter",
+  "name": "@big-whale-labs/seal-hub-contract",
   "version": "0.0.1",
-  "description": "A starter for Solidity smart contracts for Ethereum",
+  "description": "Contract to store anonymous ECDSA commitments",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Borodutch/smart-contract-starter"
+    "url": "git+https://github.com/BigWhaleLabs/seal-hub-contract"
   },
   "license": "MIT",
   "np": {
@@ -68,5 +68,9 @@
     "typechain": "^8.1.1",
     "typescript": "^4.8.4"
   },
-  "packageManager": "yarn@3.2.4"
+  "packageManager": "yarn@3.2.4",
+  "dependencies": {
+    "@big-whale-labs/versioned-contract": "^1.0.2",
+    "@opengsn/contracts": "3.0.0-beta.1"
+  }
 }
