@@ -7,7 +7,6 @@ import "@big-whale-labs/versioned-contract/contracts/Versioned.sol";
 import "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol";
 import "./models/ECDSAProof.sol";
 import "./interfaces/IECDSACheckerVerifier.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SealHub is ERC2771Recipient, Versioned {
   using Counters for Counters.Counter;
