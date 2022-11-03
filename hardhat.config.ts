@@ -20,7 +20,7 @@ const {
       '0000000000000000000000000000000000000000000000000000000000000000'
     ),
   }),
-  ETH_RPC: str(),
+  ETH_RPC: str({ devDefault: testOnly('') }),
   ETHERSCAN_API_KEY: str({ devDefault: testOnly('') }),
   COINMARKETCAP_API_KEY: str({ devDefault: testOnly('') }),
 })
