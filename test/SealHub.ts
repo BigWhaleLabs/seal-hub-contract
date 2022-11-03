@@ -50,12 +50,26 @@ describe('SealHub contract tests', () => {
         30
       )
     })
+
     it('should add a commitment', async function () {
       const fakeProof = await getFakeCommitmentProof()
       const SealHub = this.SealHubContract
       await SealHub.createCommitment(fakeProof)
       expect((await SealHub.tree()).numberOfLeaves).to.equal(1)
       expect(await SealHub.merkleRoots(0)).to.equal((await SealHub.tree()).root)
+    })
+
+    it('should not mint if the zk proof is invalid', async function () {
+      await this.fakeVerifierContract.mock.verifyProof.returns(false)
+      const contract = await this.SealHubFactory.deploy(
+        this.version,
+        this.fakeVerifierContract.address,
+        zeroAddress,
+        30
+      )
+      await expect(
+        contract.createCommitment(await getFakeCommitmentProof())
+      ).to.be.revertedWith('Invalid ZK proof')
     })
   })
 })
