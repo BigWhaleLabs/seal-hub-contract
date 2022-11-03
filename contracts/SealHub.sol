@@ -9,7 +9,7 @@ import "./models/ECDSAProof.sol";
 import "./interfaces/IECDSACheckerVerifier.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SealHub is ERC2771Recipient, Versioned, Ownable {
+contract SealHub is ERC2771Recipient, Versioned {
   using Counters for Counters.Counter;
   using IncrementalBinaryTree for IncrementalTreeData;
 
@@ -62,7 +62,7 @@ contract SealHub is ERC2771Recipient, Versioned, Ownable {
   function _msgSender()
     internal
     view
-    override(Context, ERC2771Recipient)
+    override(ERC2771Recipient)
     returns (address sender)
   {
     sender = ERC2771Recipient._msgSender();
@@ -71,7 +71,7 @@ contract SealHub is ERC2771Recipient, Versioned, Ownable {
   function _msgData()
     internal
     view
-    override(Context, ERC2771Recipient)
+    override(ERC2771Recipient)
     returns (bytes calldata ret)
   {
     return ERC2771Recipient._msgData();
