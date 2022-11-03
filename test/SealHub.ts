@@ -1,7 +1,13 @@
-import { SealHub__factory } from 'typechain'
+import { ECDSAProofStruct } from 'typechain/contracts/SealHub'
+import { SealHub, SealHub__factory } from 'typechain'
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
-import { getIncrementalTreeContract, zeroAddress } from './utils'
+import {
+  getFakeCommitmentProof,
+  getFakeECDSAVerifier,
+  getIncrementalTreeContract,
+  zeroAddress,
+} from './utils'
 
 describe('SealHub contract tests', () => {
   before(async function () {
@@ -29,6 +35,22 @@ describe('SealHub contract tests', () => {
       expect(await contract.getTrustedForwarder()).to.equal(zeroAddress)
       expect((await contract.tree()).depth).to.equal(30)
       expect((await contract.tree()).numberOfLeaves).to.equal(0)
+    })
+  })
+
+  describe('Adding commitment', function () {
+    this.beforeEach(async function () {
+      // Verifier
+      this.fakeVerifierContract = await getFakeECDSAVerifier(this.owner)
+      await this.fakeVerifierContract.mock.verifyProof.returns(true)
+      // SealHub
+      this.SealHubContract = await (
+        this.SealHubFactory as SealHub__factory
+      ).deploy(this.version, this.fakeVerifierContract.address, zeroAddress, 30)
+    })
+    it('should add a commitment', async function () {
+      const fakeProof = await getFakeCommitmentProof()
+      await (this.SealHubContract as SealHub).createCommitment(fakeProof)
     })
   })
 })
