@@ -28,11 +28,12 @@ contract SealHub is ERC2771Recipient, Versioned, Ownable {
   constructor(
     string memory _version,
     address _verifierContract,
-    address _trustedForwarder
+    address _trustedForwarder,
+    uint8 _depth
   ) Versioned(_version) {
     verifierContract = _verifierContract;
     _setTrustedForwarder(_trustedForwarder);
-    tree.init(30, 0);
+    tree.init(_depth, 0);
   }
 
   function createCommitment(ECDSAProof memory proof) public {
