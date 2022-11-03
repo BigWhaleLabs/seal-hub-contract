@@ -23,7 +23,7 @@ describe('SealHub contract tests', () => {
 
   describe('Constructor', function () {
     it('should deploy the contract with the correct fields', async function () {
-      const contract = await (this.SealHubFactory as SealHub__factory).deploy(
+      const contract = await this.SealHubFactory.deploy(
         this.version,
         zeroAddress,
         zeroAddress,
@@ -43,13 +43,16 @@ describe('SealHub contract tests', () => {
       this.fakeVerifierContract = await getFakeECDSAVerifier(this.owner)
       await this.fakeVerifierContract.mock.verifyProof.returns(true)
       // SealHub
-      this.SealHubContract = await (
-        this.SealHubFactory as SealHub__factory
-      ).deploy(this.version, this.fakeVerifierContract.address, zeroAddress, 30)
+      this.SealHubContract = await this.SealHubFactory.deploy(
+        this.version,
+        this.fakeVerifierContract.address,
+        zeroAddress,
+        30
+      )
     })
     it('should add a commitment', async function () {
       const fakeProof = await getFakeCommitmentProof()
-      const SealHub = this.SealHubContract as SealHub
+      const SealHub = this.SealHubContract
       await SealHub.createCommitment(fakeProof)
       expect((await SealHub.tree()).numberOfLeaves).to.equal(1)
       expect(await SealHub.merkleRoots(0)).to.equal((await SealHub.tree()).root)
