@@ -1,0 +1,72 @@
+{
+  "name": "@borodutch/smart-contract-starter",
+  "version": "0.0.1",
+  "description": "A starter for Solidity smart contracts for Ethereum",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Borodutch/smart-contract-starter"
+  },
+  "license": "MIT",
+  "np": {
+    "2fa": false,
+    "tests": false,
+    "cleanup": false,
+    "yarn": false
+  },
+  "files": [
+    "dist/typechain/**/*"
+  ],
+  "main": "dist/typechain/index.js",
+  "types": "dist/typechain/index.d.ts",
+  "scripts": {
+    "build": "yarn clean-cache && yarn hardhat compile",
+    "clean-cache": "yarn hardhat clean",
+    "test": "NODE_ENV=test yarn hardhat test",
+    "coverage": "yarn hardhat compile --force && node --max_old_space_size=6144 node_modules/.bin/hardhat coverage --testfiles 'test/**/*.ts' --show-stack-traces",
+    "deploy": "yarn hardhat run --network deploy scripts/deploy.ts",
+    "eth-lint": "yarn solhint 'contracts/**/*.sol'",
+    "lint": "prettier --check . && eslint --max-warnings 0 --ext ts scripts test && yarn eth-lint",
+    "prettify": "prettier --write .",
+    "release": "np",
+    "prepublishOnly": "yarn build && yarn tsc"
+  },
+  "devDependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "@nomiclabs/hardhat-ethers": "^2.2.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@typechain/ethers-v5": "^10.1.1",
+    "@typechain/hardhat": "^6.1.4",
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.3",
+    "envalid": "^7.3.1",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.4.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.12.2",
+    "hardhat-gas-reporter": "^1.0.9",
+    "np": "^7.6.2",
+    "prettier": "^2.7.1",
+    "prettier-plugin-solidity": "^1.0.0-rc.1",
+    "solhint": "^3.3.7",
+    "solidity-coverage": "^0.8.2",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.1.1",
+    "typescript": "^4.8.4"
+  },
+  "packageManager": "yarn@3.2.4"
+}
