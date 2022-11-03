@@ -30,10 +30,7 @@ contract SealHub is ERC2771Recipient, Versioned {
     _setTrustedForwarder(_trustedForwarder);
   }
 
-  function createCommitment(
-    uint256 commitment,
-    ECDSAProof memory proof
-  ) public {
+  function createCommitment(ECDSAProof memory proof) public {
     // Check the proof
     require(
       IECDSACheckerVerifier(verifierContract).verifyProof(
@@ -45,6 +42,7 @@ contract SealHub is ERC2771Recipient, Versioned {
       "Invalid ZK proof"
     );
     // Add the commitment
+    uint256 commitment = proof.input[0];
     commitmentMap[commitment] = true;
     commitments.push(commitment);
     numberOfCommitments.increment();
