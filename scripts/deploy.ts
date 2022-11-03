@@ -1,5 +1,13 @@
+import { GSN_FORWARDER_CONTRACT_ADDRESS } from '@big-whale-labs/constants'
 import { ethers, run } from 'hardhat'
+import { getIncrementalTreeContract } from '../test/utils'
 import { utils } from 'ethers'
+import { version } from '../package.json'
+import prompt from 'prompt'
+
+const regexes = {
+  ethereumAddress: /^0x[a-fA-F0-9]{40}$/,
+}
 
 async function main() {
   const [deployer] = await ethers.getSigners()
@@ -21,11 +29,43 @@ async function main() {
   } as { [chainId: number]: string }
   const chainName = chains[chainId]
 
-  const contractName = 'MyERC721'
-  const contractSymbol = 'MYERC721'
+  console.log(`Deploying IncrementalBinaryTreeLib...`)
+  const incrementalBinaryTreeLibAddress = await getIncrementalTreeContract()
+
+  console.log(
+    `IncrementalBinaryTreeLib deployed to ${incrementalBinaryTreeLibAddress}`
+  )
+
+  const contractName = 'SealHub'
   console.log(`Deploying ${contractName}...`)
-  const Contract = await ethers.getContractFactory(contractName)
-  const contract = await Contract.deploy(contractName, contractSymbol)
+  const factory = await ethers.getContractFactory(contractName, {
+    libraries: {
+      IncrementalBinaryTree: incrementalBinaryTreeLibAddress,
+    },
+  })
+  const { verifierAddress, forwarder, depth } = await prompt.get({
+    properties: {
+      verifierAddress: {
+        required: true,
+        pattern: regexes.ethereumAddress,
+      },
+      forwarder: {
+        required: true,
+        pattern: regexes.ethereumAddress,
+        default: GSN_FORWARDER_CONTRACT_ADDRESS,
+      },
+      depth: {
+        required: true,
+        default: 30,
+      },
+    },
+  })
+  const contract = await factory.deploy(
+    version,
+    verifierAddress,
+    forwarder,
+    depth
+  )
 
   console.log(
     'Deploy tx gas price:',
@@ -47,7 +87,10 @@ async function main() {
   try {
     await run('verify:verify', {
       address,
-      constructorArguments: [contractName, contractSymbol],
+      constructorArguments: [version, verifierAddress, forwarder, depth],
+    })
+    await run('verify:verify', {
+      incrementalBinaryTreeLibAddress,
     })
   } catch (err) {
     console.log(

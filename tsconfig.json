@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2018",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "resolveJsonModule": true
   },
   "include": [
     "scripts/**/*",
