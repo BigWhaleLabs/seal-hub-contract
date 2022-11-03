@@ -52,6 +52,7 @@ describe('SealHub contract tests', () => {
       const SealHub = this.SealHubContract as SealHub
       await SealHub.createCommitment(fakeProof)
       expect((await SealHub.tree()).numberOfLeaves).to.equal(1)
+      expect(await SealHub.merkleRoots(0)).to.equal((await SealHub.tree()).root)
     })
   })
 })
