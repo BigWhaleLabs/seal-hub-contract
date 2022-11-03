@@ -7,7 +7,6 @@ import { poseidonContract } from 'circomlibjs'
 export const zeroAddress = '0x0000000000000000000000000000000000000000'
 
 export async function getIncrementalTreeContract() {
-  console.log(poseidonContract)
   const poseidonT3ABI = poseidonContract.generateABI(2)
   const poseidonT3Bytecode = poseidonContract.createCode(2)
 
@@ -22,10 +21,6 @@ export async function getIncrementalTreeContract() {
 
   await poseidonT3Lib.deployed()
 
-  console.log(
-    `PoseidonT3 library has been deployed to: ${poseidonT3Lib.address}`
-  )
-
   const IncrementalBinaryTreeLibFactory = await ethers.getContractFactory(
     'IncrementalBinaryTree',
     {
@@ -39,9 +34,6 @@ export async function getIncrementalTreeContract() {
 
   await incrementalBinaryTreeLib.deployed()
 
-  console.log(
-    `IncrementalBinaryTree library has been deployed to: ${incrementalBinaryTreeLib.address}`
-  )
   return incrementalBinaryTreeLib.address
 }
 
