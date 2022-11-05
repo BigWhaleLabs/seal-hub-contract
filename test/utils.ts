@@ -72,7 +72,9 @@ export async function getFakeECDSAVerifier(signer: SignerWithAddress) {
   ])
 }
 
-export function getFakeCommitmentProof(): ECDSAProofStruct {
+export function getFakeCommitmentProof(
+  inputMessage = 'seal'
+): ECDSAProofStruct {
   return {
     a: [1, 2],
     b: [
@@ -80,7 +82,7 @@ export function getFakeCommitmentProof(): ECDSAProofStruct {
       [3, 4],
     ],
     c: [1, 2],
-    input: inputsForMessage('seal'),
+    input: inputsForMessage(inputMessage),
   }
 }
 
