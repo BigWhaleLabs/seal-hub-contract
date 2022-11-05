@@ -70,8 +70,6 @@ describe('SealHub contract tests', () => {
     })
 
     it('should create same merkle root as in contract when leaves added', async function () {
-      // const fakeProofA = await getFakeCommitmentProof()
-      // const fakeProofB = await getFakeCommitmentProof('hub')
       const SealHub = this.SealHubContract
       const tree = new IncrementalMerkleTree(poseidon, 30, BigInt(0), 2)
       for (let i = 0; i <= 50; i++) {
