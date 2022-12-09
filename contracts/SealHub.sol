@@ -18,6 +18,7 @@ contract SealHub is ERC2771Recipient, Versioned {
   mapping(uint256 => bool) public commitmentMap;
   uint256[] public commitments;
   bytes32[] public merkleRoots;
+  mapping(bytes32 => bool) public merkleRootMap;
   IncrementalTreeData public tree;
 
   // Events
@@ -55,6 +56,7 @@ contract SealHub is ERC2771Recipient, Versioned {
     tree.insert(commitment);
     bytes32 merkleRoot = bytes32(tree.root);
     merkleRoots.push(merkleRoot);
+    merkleRootMap[merkleRoot] = true;
     emit CommitmentCreated(commitment, merkleRoot);
   }
 
