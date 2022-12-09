@@ -62,7 +62,7 @@ contract SealHub is ERC2771Recipient, Versioned {
 
   function isCommitmentMerkleRootValid(
     bytes32 merkleRoot
-  ) public view returns (bool) {
+  ) external view returns (bool) {
     return merkleRootMap[merkleRoot];
   }
 
