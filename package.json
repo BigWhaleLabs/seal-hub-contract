@@ -1,6 +1,6 @@
 {
   "name": "@big-whale-labs/seal-hub-contract",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Contract to store anonymous ECDSA commitments",
   "repository": {
     "type": "git",
