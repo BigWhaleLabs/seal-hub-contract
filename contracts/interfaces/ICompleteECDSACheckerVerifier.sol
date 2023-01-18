@@ -59,11 +59,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-interface IECDSACheckerVerifier {
-  function verifyProof(
-    uint256[2] memory a,
-    uint256[2][2] memory b,
-    uint256[2] memory c,
-    uint256[1] memory input
+import "../models/ECDSAProof.sol";
+import "../models/UPrecomputesProof.sol";
+
+interface ICompleteECDSACheckerVerifier {
+  function verifyProofs(
+    ECDSAProof memory _ecdsaProof,
+    UPrecomputesProof memory _uPrecomputesProof
   ) external view returns (bool r);
 }

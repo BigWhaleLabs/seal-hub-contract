@@ -1,5 +1,8 @@
-import { BigNumber, BigNumberish, utils } from 'ethers'
-import { ECDSAProofStruct } from 'typechain/contracts/SealHub'
+import { BigNumber, utils } from 'ethers'
+import {
+  ECDSAProofStruct,
+  UPrecomputesProofStruct,
+} from 'typechain/contracts/SealHub'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { ethers, waffle } from 'hardhat'
 import { poseidonContract } from 'circomlibjs'
@@ -38,27 +41,61 @@ export async function getFakeECDSAVerifier(signer: SignerWithAddress) {
     {
       inputs: [
         {
-          internalType: 'uint256[2]',
-          name: 'a',
-          type: 'uint256[2]',
+          components: [
+            {
+              internalType: 'uint256[2]',
+              name: 'a',
+              type: 'uint256[2]',
+            },
+            {
+              internalType: 'uint256[2][2]',
+              name: 'b',
+              type: 'uint256[2][2]',
+            },
+            {
+              internalType: 'uint256[2]',
+              name: 'c',
+              type: 'uint256[2]',
+            },
+            {
+              internalType: 'uint256[2]',
+              name: 'input',
+              type: 'uint256[2]',
+            },
+          ],
+          internalType: 'struct ECDSAProof',
+          name: '_ecdsaProof',
+          type: 'tuple',
         },
         {
-          internalType: 'uint256[2][2]',
-          name: 'b',
-          type: 'uint256[2][2]',
-        },
-        {
-          internalType: 'uint256[2]',
-          name: 'c',
-          type: 'uint256[2]',
-        },
-        {
-          internalType: 'uint256[1]',
-          name: 'input',
-          type: 'uint256[1]',
+          components: [
+            {
+              internalType: 'uint256[2]',
+              name: 'a',
+              type: 'uint256[2]',
+            },
+            {
+              internalType: 'uint256[2][2]',
+              name: 'b',
+              type: 'uint256[2][2]',
+            },
+            {
+              internalType: 'uint256[2]',
+              name: 'c',
+              type: 'uint256[2]',
+            },
+            {
+              internalType: 'uint256[1]',
+              name: 'input',
+              type: 'uint256[1]',
+            },
+          ],
+          internalType: 'struct UPrecomputesProof',
+          name: '_uPrecomputesProof',
+          type: 'tuple',
         },
       ],
-      name: 'verifyProof',
+      name: 'verifyProofs',
       outputs: [
         {
           internalType: 'bool',
@@ -72,9 +109,10 @@ export async function getFakeECDSAVerifier(signer: SignerWithAddress) {
   ])
 }
 
-export function getFakeCommitmentProof(
-  inputMessage = 'seal'
+export function getFakeCommitmentProofEcdsa(
+  message = 'seal'
 ): ECDSAProofStruct {
+  const messageBytes = utils.toUtf8Bytes(message)
   return {
     a: [1, 2],
     b: [
@@ -82,11 +120,23 @@ export function getFakeCommitmentProof(
       [3, 4],
     ],
     c: [1, 2],
-    input: inputsForMessage(inputMessage),
+    input: [
+      BigNumber.from(messageBytes).toBigInt(),
+      BigNumber.from(messageBytes).toBigInt(),
+    ],
   }
 }
-
-function inputsForMessage(message: string) {
+export function getFakeCommitmentProofUPrecomputes(
+  message = 'seal'
+): UPrecomputesProofStruct {
   const messageBytes = utils.toUtf8Bytes(message)
-  return [BigNumber.from(messageBytes).toBigInt()] as [BigNumberish]
+  return {
+    a: [1, 2],
+    b: [
+      [1, 2],
+      [3, 4],
+    ],
+    c: [1, 2],
+    input: [BigNumber.from(messageBytes).toBigInt()],
+  }
 }

@@ -5,8 +5,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@opengsn/contracts/src/ERC2771Recipient.sol";
 import "@big-whale-labs/versioned-contract/contracts/Versioned.sol";
 import "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol";
-import "./models/ECDSAProof.sol";
-import "./interfaces/IECDSACheckerVerifier.sol";
+import "./interfaces/ICompleteECDSACheckerVerifier.sol";
 
 contract SealHub is ERC2771Recipient, Versioned {
   using Counters for Counters.Counter;
@@ -36,19 +35,20 @@ contract SealHub is ERC2771Recipient, Versioned {
     tree.init(_depth, 0);
   }
 
-  function createCommitment(ECDSAProof memory proof) public {
+  function createCommitment(
+    ECDSAProof memory _ecdsaProof,
+    UPrecomputesProof memory _uPrecomputesProof
+  ) public {
     // Check the proof
     require(
-      IECDSACheckerVerifier(verifierContract).verifyProof(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.input
+      ICompleteECDSACheckerVerifier(verifierContract).verifyProofs(
+        _ecdsaProof,
+        _uPrecomputesProof
       ),
       "Invalid ZK proof"
     );
     // Add the commitment
-    uint256 commitment = proof.input[0];
+    uint256 commitment = _ecdsaProof.input[0];
     commitmentMap[commitment] = true;
     commitments.push(commitment);
     numberOfCommitments.increment();

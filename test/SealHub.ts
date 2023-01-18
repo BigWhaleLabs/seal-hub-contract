@@ -3,7 +3,8 @@ import { IncrementalMerkleTree } from '@zk-kit/incremental-merkle-tree'
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
 import {
-  getFakeCommitmentProof,
+  getFakeCommitmentProofEcdsa,
+  getFakeCommitmentProofUPrecomputes,
   getFakeECDSAVerifier,
   getIncrementalTreeContract,
   zeroAddress,
@@ -43,7 +44,7 @@ describe('SealHub contract tests', () => {
     this.beforeEach(async function () {
       // Verifier
       this.fakeVerifierContract = await getFakeECDSAVerifier(this.owner)
-      await this.fakeVerifierContract.mock.verifyProof.returns(true)
+      await this.fakeVerifierContract.mock.verifyProofs.returns(true)
       // SealHub
       this.SealHubContract = await this.SealHubFactory.deploy(
         this.version,
@@ -54,9 +55,10 @@ describe('SealHub contract tests', () => {
     })
 
     it('should add a commitment', async function () {
-      const fakeProof = await getFakeCommitmentProof()
+      const fakeEcdsaProof = await getFakeCommitmentProofEcdsa()
+      const fakeUPrecomputesProof = await getFakeCommitmentProofUPrecomputes()
       const SealHub = this.SealHubContract
-      await SealHub.createCommitment(fakeProof)
+      await SealHub.createCommitment(fakeEcdsaProof, fakeUPrecomputesProof)
       expect((await SealHub.tree()).numberOfLeaves).to.equal(1)
       expect(await SealHub.merkleRoots(0)).to.equal((await SealHub.tree()).root)
     })
@@ -73,9 +75,14 @@ describe('SealHub contract tests', () => {
       const SealHub = this.SealHubContract
       const tree = new IncrementalMerkleTree(poseidon, 30, BigInt(0), 2)
       for (let i = 0; i <= 50; i++) {
-        const fakeProof = await getFakeCommitmentProof(String(Math.random()))
-        await SealHub.createCommitment(fakeProof)
-        tree.insert(fakeProof.input[0])
+        const fakeEcdsaProof = await getFakeCommitmentProofEcdsa(
+          String(Math.random())
+        )
+        const fakeUPrecomputesProof = await getFakeCommitmentProofUPrecomputes(
+          String(Math.random())
+        )
+        await SealHub.createCommitment(fakeEcdsaProof, fakeUPrecomputesProof)
+        tree.insert(fakeEcdsaProof.input[0])
       }
       const { root, numberOfLeaves } = await SealHub.tree()
       expect(numberOfLeaves).to.equal(tree.leaves.length)
@@ -87,8 +94,10 @@ describe('SealHub contract tests', () => {
     it('should fail if number of leaves are different', async function () {
       const SealHub = this.SealHubContract
       const tree = new IncrementalMerkleTree(poseidon, 30, BigInt(0), 2)
-      const fakeProof = await getFakeCommitmentProof(String(Math.random()))
-      tree.insert(fakeProof.input[0])
+      const fakeEcdsaProof = await getFakeCommitmentProofEcdsa(
+        String(Math.random())
+      )
+      tree.insert(fakeEcdsaProof.input[0])
 
       const { root, numberOfLeaves } = await SealHub.tree()
       expect(numberOfLeaves).not.to.equal(tree.leaves.length)
@@ -98,15 +107,21 @@ describe('SealHub contract tests', () => {
     })
 
     it('should not mint if the zk proof is invalid', async function () {
-      await this.fakeVerifierContract.mock.verifyProof.returns(false)
+      await this.fakeVerifierContract.mock.verifyProofs.returns(false)
       const contract = await this.SealHubFactory.deploy(
         this.version,
         this.fakeVerifierContract.address,
         zeroAddress,
         30
       )
+      const fakeEcdsaProof = await getFakeCommitmentProofEcdsa(
+        String(Math.random())
+      )
+      const fakeUPrecomputesProof = await getFakeCommitmentProofUPrecomputes(
+        String(Math.random())
+      )
       await expect(
-        contract.createCommitment(await getFakeCommitmentProof())
+        contract.createCommitment(fakeEcdsaProof, fakeUPrecomputesProof)
       ).to.be.revertedWith('Invalid ZK proof')
     })
   })

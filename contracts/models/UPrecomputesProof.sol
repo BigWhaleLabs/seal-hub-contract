@@ -59,9 +59,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-struct ECDSAProof {
+struct UPrecomputesProof {
   uint[2] a;
   uint[2][2] b;
   uint[2] c;
-  uint[2] input;
+  uint[1] input;
 }
