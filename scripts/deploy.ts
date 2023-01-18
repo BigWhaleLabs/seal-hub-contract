@@ -1,4 +1,7 @@
-import { GSN_FORWARDER_CONTRACT_ADDRESS } from '@big-whale-labs/constants'
+import {
+  GSN_FORWARDER_CONTRACT_ADDRESS,
+  SEAL_HUB_VERIFIER_CONTRACT_ADDRESS,
+} from '@big-whale-labs/constants'
 import { ethers, run } from 'hardhat'
 import { getIncrementalTreeContract } from '../test/utils'
 import { utils } from 'ethers'
@@ -48,6 +51,7 @@ async function main() {
       verifierAddress: {
         required: true,
         pattern: regexes.ethereumAddress,
+        default: SEAL_HUB_VERIFIER_CONTRACT_ADDRESS,
       },
       forwarder: {
         required: true,
