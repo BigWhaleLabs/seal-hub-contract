@@ -94,7 +94,7 @@ async function main() {
       constructorArguments: [version, verifierAddress, forwarder, depth],
     })
     await run('verify:verify', {
-      incrementalBinaryTreeLibAddress,
+      address: incrementalBinaryTreeLibAddress,
     })
   } catch (err) {
     console.log(
