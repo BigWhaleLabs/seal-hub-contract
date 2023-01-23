@@ -32,7 +32,7 @@
     "prepublishOnly": "yarn build && yarn tsc"
   },
   "devDependencies": {
-    "@big-whale-labs/constants": "^0.1.40",
+    "@big-whale-labs/constants": "^0.1.43",
     "@ethersproject/providers": "^5.7.2",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
     "@nomiclabs/hardhat-etherscan": "^3.1.5",
@@ -43,8 +43,8 @@
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
     "@zk-kit/incremental-merkle-tree": "^1.0.0",
     "chai": "^4.3.7",
     "dotenv": "^16.0.3",
