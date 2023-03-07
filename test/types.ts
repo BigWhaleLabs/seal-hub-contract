@@ -1,3 +1,4 @@
+import { Contract } from 'ethers'
 import { SealHub, SealHub__factory } from 'typechain'
 import type { MockContract } from 'ethereum-waffle'
 import type { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address'
@@ -5,8 +6,8 @@ import type { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signe
 declare module 'mocha' {
   export interface Context {
     // Facoriries for contracts
-    SealHubFactory: SealHub__factory
-    SealHubContract: SealHub
+    factory: SealHub__factory
+    contract: SealHub | Contract
     // Mock contracts
     fakeVerifierContract: MockContract
     // Signers
