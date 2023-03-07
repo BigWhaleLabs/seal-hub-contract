@@ -2,6 +2,14 @@
 
 Contract to store anonymous ECDSA commitments.
 
+# Deployments
+
+| Contract                | Address                                                                                                                      |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Proxy                   | [0xB1E8EBd9768F6c0b8004506d6F87321DC0aed583](https://goerli.etherscan.io/address/0xB1E8EBd9768F6c0b8004506d6F87321DC0aed583) |
+| Implementation(SealHub) | [0x3d0ec70f0f2e1Cc5C176Db31ef8F8764c5c2667D](https://goerli.etherscan.io/address/0x3d0ec70f0f2e1Cc5C176Db31ef8F8764c5c2667D) |
+| Proxy Admin             | [0xd33d08f503EB0E65bA0a6218ee895E3335Df003C](https://goerli.etherscan.io/address/0xd33d08f503EB0E65bA0a6218ee895E3335Df003C) |
+
 ## Usage
 
 1. Clone the repository with `git clone git@github.com:BigWhaleLabs/seal-hub-contract.git`

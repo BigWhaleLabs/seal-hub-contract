@@ -2,16 +2,17 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@opengsn/contracts/src/ERC2771Recipient.sol";
-import "@big-whale-labs/versioned-contract/contracts/Versioned.sol";
 import "@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol";
 import "./interfaces/ICompleteECDSACheckerVerifier.sol";
 
-contract SealHub is ERC2771Recipient, Versioned {
+contract SealHub is Initializable, ERC2771Recipient {
   using Counters for Counters.Counter;
   using IncrementalBinaryTree for IncrementalTreeData;
 
   // State
+  string public version;
   address public verifierContract;
   Counters.Counter public numberOfCommitments;
   mapping(uint256 => bool) public commitmentMap;
@@ -23,18 +24,20 @@ contract SealHub is ERC2771Recipient, Versioned {
   // Events
   event CommitmentCreated(uint256 commitmentId, bytes32 merkleRoot);
 
-  // Functions
-  constructor(
+  // Constructor
+  function initialize(
     string memory _version,
     address _verifierContract,
     address _trustedForwarder,
     uint8 _depth
-  ) Versioned(_version) {
+  ) public initializer {
     verifierContract = _verifierContract;
     _setTrustedForwarder(_trustedForwarder);
     tree.init(_depth, 0);
+    version = _version;
   }
 
+  // Functions
   function createCommitment(
     ECDSAProof memory _ecdsaProof,
     UPrecomputesProof memory _uPrecomputesProof

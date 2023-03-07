@@ -2,7 +2,7 @@ import {
   GSN_FORWARDER_CONTRACT_ADDRESS,
   SEAL_HUB_VERIFIER_CONTRACT_ADDRESS,
 } from '@big-whale-labs/constants'
-import { ethers, run } from 'hardhat'
+import { ethers, run, upgrades } from 'hardhat'
 import { getIncrementalTreeContract } from '../test/utils'
 import { utils } from 'ethers'
 import { version } from '../package.json'
@@ -64,12 +64,16 @@ async function main() {
       },
     },
   })
-  const contract = await factory.deploy(
-    version,
-    verifierAddress,
-    forwarder,
-    depth
-  )
+  const constructorArguments = [version, verifierAddress, forwarder, depth] as [
+    string,
+    string,
+    string,
+    string
+  ]
+  const contract = await upgrades.deployProxy(factory, constructorArguments, {
+    initializer: 'initialize',
+    unsafeAllow: ['external-library-linking'],
+  })
 
   console.log(
     'Deploy tx gas price:',
@@ -80,9 +84,17 @@ async function main() {
     utils.formatEther(contract.deployTransaction.gasLimit)
   )
   await contract.deployed()
-  const address = contract.address
 
-  console.log('Contract deployed to:', address)
+  const implementationAddress = await upgrades.erc1967.getImplementationAddress(
+    contract.address
+  )
+  const adminAddress = await upgrades.erc1967.getAdminAddress(contract.address)
+
+  console.log('SealHub Proxy address:', contract.address)
+  console.log('Implementation address:', implementationAddress)
+  console.log('Admin address:', adminAddress)
+
+  console.log('Contract deployed to:', contract.address)
   console.log('Wait for 1 minute to make sure blockchain is updated')
   await new Promise((resolve) => setTimeout(resolve, 60 * 1000))
 
@@ -90,8 +102,8 @@ async function main() {
   console.log('Verifying contract on Etherscan')
   try {
     await run('verify:verify', {
-      address,
-      constructorArguments: [version, verifierAddress, forwarder, depth],
+      address: implementationAddress,
+      constructorArguments,
     })
     await run('verify:verify', {
       address: incrementalBinaryTreeLibAddress,
@@ -105,12 +117,12 @@ async function main() {
 
   // Print out the information
   console.log(`${contractName} deployed and verified on Etherscan!`)
-  console.log('Contract address:', address)
+  console.log('Contract address:', implementationAddress)
   console.log(
     'Etherscan URL:',
     `https://${
       chainName !== 'mainnet' ? `${chainName}.` : ''
-    }etherscan.io/address/${address}`
+    }etherscan.io/address/${implementationAddress}`
   )
 }
 
