@@ -58,9 +58,9 @@ export async function getFakeECDSAVerifier(signer: SignerWithAddress) {
               type: 'uint256[2]',
             },
             {
-              internalType: 'uint256[2]',
+              internalType: 'uint256[6]',
               name: 'input',
-              type: 'uint256[2]',
+              type: 'uint256[6]',
             },
           ],
           internalType: 'struct ECDSAProof',
@@ -121,6 +121,10 @@ export function getFakeCommitmentProofEcdsa(
     ],
     c: [1, 2],
     input: [
+      BigNumber.from(messageBytes).toBigInt(),
+      BigNumber.from(messageBytes).toBigInt(),
+      BigNumber.from(messageBytes).toBigInt(),
+      BigNumber.from(messageBytes).toBigInt(),
       BigNumber.from(messageBytes).toBigInt(),
       BigNumber.from(messageBytes).toBigInt(),
     ],

@@ -57,11 +57,11 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.19;
 
 struct ECDSAProof {
   uint[2] a;
   uint[2][2] b;
   uint[2] c;
-  uint[2] input;
+  uint[6] input;
 }
