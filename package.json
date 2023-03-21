@@ -32,7 +32,7 @@
     "prepublishOnly": "yarn build && yarn tsc --skipLibCheck"
   },
   "devDependencies": {
-    "@big-whale-labs/constants": "^0.1.76",
+    "@big-whale-labs/constants": "^0.1.80",
     "@ethersproject/providers": "^5.7.2",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
     "@nomiclabs/hardhat-etherscan": "^3.1.7",
