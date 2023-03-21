@@ -32,10 +32,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@big-whale-labs/constants@npm:^0.1.80":
-  version: 0.1.80
-  resolution: "@big-whale-labs/constants@npm:0.1.80"
-  checksum: dc41f3bc0a4add13b4f2e7242355741310b65a71a8ba1b9f8683b443d6dbb90312832fda2fbfcc20f65bbd30de722c9c15c2d7512680de6d7756031df4993a3a
+"@big-whale-labs/constants@npm:^0.1.83":
+  version: 0.1.83
+  resolution: "@big-whale-labs/constants@npm:0.1.83"
+  checksum: fff261bdfb90b1e18ea2b5d1160e45b6c35ec085d04a3ae025419de6b897f4b5cd1086823925c818c072e2248f6c03ca3886e24787127f3d0ae20c3bac15db5e
   languageName: node
   linkType: hard
 
@@ -52,7 +52,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@big-whale-labs/seal-hub-contract@workspace:."
   dependencies:
-    "@big-whale-labs/constants": ^0.1.80
+    "@big-whale-labs/constants": ^0.1.83
     "@big-whale-labs/poseidon": ^0.0.5
     "@big-whale-labs/versioned-contract": ^1.0.2
     "@ethersproject/providers": ^5.7.2
